@@ -1,4 +1,4 @@
-﻿import json
+import json
 
 with open("dashboard_data.json", "r") as f:
     data = json.load(f)
@@ -348,8 +348,16 @@ html_content = f"""<!DOCTYPE html>
 </html>
 """
 
-artifact_file = r"C:\Users\DigitalArthas\.gemini\antigravity\brain\1ec6b764-ab9d-477a-bc51-69a33c482e05\health_dashboard.html"
-with open(artifact_file, 'w', encoding='utf-8') as f:
+import os
+
+workspace_dir = os.path.dirname(os.path.abspath(__file__))
+dashboard_file = os.path.join(workspace_dir, "dashboard.html")
+index_file = os.path.join(workspace_dir, "index.html")
+
+with open(dashboard_file, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print(f"Generated interactive dashboard HTML at {artifact_file}")
+with open(index_file, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print(f"Generated interactive dashboard HTML at {dashboard_file} and {index_file}")
