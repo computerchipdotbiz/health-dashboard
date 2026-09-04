@@ -8,6 +8,7 @@ with open(json_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 weights_json = json.dumps(data['weights'])
+avg_steps = data.get('avg_45d_steps', 4226)
 
 html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -55,7 +56,7 @@ html_content = f"""<!DOCTYPE html>
           <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
           <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Renpho & Google Fit Health Analytics</h1>
         </div>
-        <p class="text-sm text-[var(--muted-foreground)] mt-1">Live synchronized scale metrics, weight trends & interactive goal forecasting</p>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">Live synchronized scale metrics, weight trends & interactive 5-lb milestone forecasts</p>
       </div>
       <div class="flex items-center gap-2">
         <span class="px-3.5 py-1 bg-emerald-500/10 text-emerald-500 font-semibold text-xs rounded-full border border-emerald-500/20">
@@ -85,12 +86,12 @@ html_content = f"""<!DOCTYPE html>
       </div>
 
       <div class="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] shadow-sm">
-        <span class="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">Peak Weight</span>
+        <span class="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">45-Day Step Avg</span>
         <div class="mt-2 flex items-baseline gap-1">
-          <span class="text-3xl font-black text-rose-400">336.9</span>
-          <span class="text-sm font-medium text-[var(--muted-foreground)]">lbs</span>
+          <span class="text-3xl font-black text-amber-500">{avg_steps:,}</span>
+          <span class="text-sm font-medium text-[var(--muted-foreground)]">steps/day</span>
         </div>
-        <span class="text-xs text-[var(--muted-foreground)] font-medium mt-1 block">Oct 2020</span>
+        <span class="text-xs text-[var(--muted-foreground)] font-medium mt-1 block">Synced from Pixel Watch & Fit</span>
       </div>
 
       <div class="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] shadow-sm">
@@ -126,128 +127,102 @@ html_content = f"""<!DOCTYPE html>
       </div>
     </div>
 
-    <!-- Goal Forecast & Interactive Step Accelerator Section -->
+    <!-- Goal Forecast & Step Accelerator Section -->
     <div class="bg-[var(--card)] p-5 md:p-6 rounded-xl border border-[var(--border)] shadow-sm space-y-6">
       
       <!-- Section Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[var(--border)] gap-4">
         <div class="flex items-center gap-3">
-          <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <div class="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/20">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
           </div>
           <div>
-            <h2 class="text-lg font-bold">Goal Target Projection & Step Accelerator</h2>
-            <p class="text-xs text-[var(--muted-foreground)]">Real-time weight goal estimation based on your recent 6-month trajectory and daily step booster</p>
+            <h2 class="text-lg font-bold">Step Booster & Goal Acceleration Simulator</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">Calculate exact speed-up from adding extra daily steps to your current 45-day baseline</p>
           </div>
         </div>
 
         <div class="flex items-center gap-3 bg-[var(--background)] px-3.5 py-2 rounded-xl border border-[var(--border)]">
-          <span class="text-xs font-semibold text-[var(--muted-foreground)]">Goal Weight:</span>
-          <div class="flex items-center gap-1">
-            <input type="number" id="targetWeightInput" value="190" step="0.5" min="100" max="300" class="w-16 bg-transparent text-base font-extrabold text-center focus:outline-none text-[var(--foreground)] border-b border-blue-500 focus:border-blue-400" />
-            <span class="text-xs font-bold text-[var(--muted-foreground)]">lbs</span>
-          </div>
+          <span class="text-xs font-semibold text-[var(--muted-foreground)]">45-Day Baseline:</span>
+          <span class="text-sm font-extrabold text-amber-500">{avg_steps:,} steps/day</span>
         </div>
       </div>
 
-      <!-- Projection Stat Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        
-        <!-- 6-Month Baseline Pace -->
-        <div class="bg-[var(--background)] p-4 rounded-xl border border-[var(--border)] flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">6-Mo Historical Pace</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-500">Actual Data</span>
-          </div>
-          <div class="my-2">
-            <div class="flex items-baseline gap-1">
-              <span class="text-3xl font-black text-blue-500" id="histRateText">-0.49</span>
-              <span class="text-xs font-semibold text-[var(--muted-foreground)]">lbs / week</span>
-            </div>
-            <p class="text-[11px] text-[var(--muted-foreground)] mt-1" id="histLossDetail">-11.5 lbs lost over the last 180 days</p>
-          </div>
-          <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2">
-            Baseline rate without extra workout
-          </div>
-        </div>
-
-        <!-- Projected Goal Date (Dynamic) -->
-        <div class="bg-[var(--background)] p-4 rounded-xl border border-[var(--border)] flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Projected Goal Date</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500" id="acceleratorBadge">Baseline Pace</span>
-          </div>
-          <div class="my-2">
-            <div class="flex items-baseline gap-2">
-              <span class="text-2xl md:text-3xl font-black text-emerald-500" id="projectedDateText">Sep 27, 2027</span>
-            </div>
-            <p class="text-[11px] text-[var(--muted-foreground)] mt-1" id="projectedWeeksText">~55.8 weeks remaining (27.2 lbs to go)</p>
-          </div>
-          <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2 flex items-center justify-between">
-            <span>Target: <strong id="goalTargetDisplay" class="text-[var(--foreground)]">190.0 lbs</strong></span>
-            <span id="daysRemainingBadge" class="font-medium text-emerald-600">391 days</span>
-          </div>
-        </div>
-
-        <!-- Effective Rate & Acceleration -->
-        <div class="bg-[var(--background)] p-4 rounded-xl border border-[var(--border)] flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Combined Loss Rate</span>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500" id="speedupPill">Base</span>
-          </div>
-          <div class="my-2">
-            <div class="flex items-baseline gap-1">
-              <span class="text-3xl font-black text-amber-500" id="effectiveRateText">-0.49</span>
-              <span class="text-xs font-semibold text-[var(--muted-foreground)]">lbs / week</span>
-            </div>
-            <p class="text-[11px] text-[var(--muted-foreground)] mt-1" id="savingsDetail">Adjust step slider below to accelerate</p>
-          </div>
-          <div class="text-[11px] text-[var(--muted-foreground)] border-t border-[var(--border)] pt-2" id="timeSavedSubtitle">
-            Time saved: <strong class="text-[var(--foreground)]">0 weeks</strong>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Interactive Daily Step Slider Box -->
+      <!-- Interactive Step Slider Card -->
       <div class="bg-[var(--background)] p-5 rounded-xl border border-[var(--border)] space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <span class="text-sm font-bold flex items-center gap-2 text-[var(--foreground)]">
-              <span class="text-xl">👟</span> Daily Step Booster Slider
+              <span class="text-xl">👟</span> Extra Steps Added Per Day (X)
             </span>
-            <p class="text-xs text-[var(--muted-foreground)] mt-0.5">Simulate adding extra daily walking steps (burns ~50 kcal per 1,000 steps at ~215 lbs)</p>
+            <p class="text-xs text-[var(--muted-foreground)] mt-0.5">
+              Current 45-day average: <strong class="text-[var(--foreground)]">{avg_steps:,} steps/day</strong>. Slide to simulate adding extra daily walking.
+            </p>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-xs text-[var(--muted-foreground)] font-medium">Daily Boost:</span>
-            <span class="px-3 py-1 bg-blue-600 text-white font-extrabold text-sm rounded-lg shadow-sm tracking-wide" id="stepValueBadge">+0 steps/day</span>
+            <span class="px-3.5 py-1.5 bg-blue-600 text-white font-black text-sm rounded-xl shadow-sm tracking-wide" id="stepValueBadge">+0 extra steps/day</span>
           </div>
         </div>
 
         <!-- Range Slider -->
         <div class="space-y-2 py-1">
-          <input type="range" id="stepSlider" min="0" max="15000" step="500" value="0" class="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+          <input type="range" id="stepSlider" min="0" max="15000" step="500" value="0" class="w-full h-3.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
           <div class="flex justify-between text-[11px] text-[var(--muted-foreground)] font-semibold">
-            <span>+0 (Baseline)</span>
-            <span>+5,000 (+0.5 lb/wk)</span>
-            <span>+10,000 (+1.0 lb/wk)</span>
-            <span>+15,000 (+1.5 lb/wk)</span>
+            <span>+0 (Baseline: {avg_steps:,})</span>
+            <span>+5,000 (Total: {avg_steps + 5000:,})</span>
+            <span>+10,000 (Total: {avg_steps + 10000:,})</span>
+            <span>+15,000 (Total: {avg_steps + 15000:,})</span>
           </div>
         </div>
 
-        <!-- Live Impact Banner -->
-        <div id="impactBanner" class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-2.5">
-            <span class="text-xl" id="bannerEmoji">🎯</span>
-            <span id="bannerSummary" class="text-[var(--foreground)] font-medium leading-relaxed">
-              Currently on track to hit <strong>190.0 lbs</strong> at your baseline 6-month pace of <strong>0.49 lbs/week</strong>.
-            </span>
+        <!-- Dynamic Impact Equation Banner -->
+        <div id="impactEquationBox" class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 space-y-2">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+            <div class="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
+              <span class="text-lg">🔥</span>
+              <span id="equationText">If you increase your steps by +0 extra/day, your weight loss stays at baseline.</span>
+            </div>
+            <div class="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 whitespace-nowrap" id="totalRateBadge">
+              Total Rate: -0.49 lbs / week
+            </div>
           </div>
-          <div id="bannerMetric" class="font-bold text-blue-500 text-right whitespace-nowrap">
-            +0 extra kcal/day
-          </div>
+          <p class="text-xs text-[var(--muted-foreground)]" id="equationSubtext">
+            Baseline 6-month loss rate is <strong>-0.49 lbs/week</strong> at {avg_steps:,} steps/day. Each +1,000 extra daily steps burns ~50 kcal/day (~0.10 lb fat/week).
+          </p>
         </div>
 
+      </div>
+
+      <!-- 5-lb Weight Loss Milestones Table -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-[var(--foreground)] flex items-center gap-2">
+              <span>🎯</span> 5-lb Milestone Target Dates
+            </h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Projected completion dates for each 5-lb interval from current weight (217.2 lbs)</p>
+          </div>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500" id="milestoneSpeedBadge">
+            At Baseline Pace
+          </span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-[var(--border)]">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[var(--background)]">
+              <tr class="border-b border-[var(--border)] text-xs uppercase text-[var(--muted-foreground)] font-bold">
+                <th class="py-3 px-4">Milestone Goal</th>
+                <th class="py-3 px-4">Remaining</th>
+                <th class="py-3 px-4">Baseline Date (No Extra Steps)</th>
+                <th class="py-3 px-4">Accelerated Date (With Extra Steps)</th>
+                <th class="py-3 px-4 text-right">Time Saved</th>
+              </tr>
+            </thead>
+            <tbody id="milestones-table-body" class="divide-y divide-[var(--border)] bg-[var(--card)]">
+              <!-- Milestones populated via JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
     </div>
@@ -279,6 +254,7 @@ html_content = f"""<!DOCTYPE html>
 
   <script>
     const allData = {weights_json};
+    const baselineAvgSteps = {avg_steps};
     
     // Sort ascending
     allData.sort((a, b) => new Date(a.dt) - new Date(b.dt));
@@ -473,7 +449,7 @@ html_content = f"""<!DOCTYPE html>
       tableBody.appendChild(tr);
     }});
 
-    // === GOAL PROJECTION & STEP ACCELERATOR LOGIC ===
+    // === 5-LB MILESTONE & STEP BOOSTER ENGINE ===
     const latestEntry = allData[allData.length - 1];
     const latestWeight = latestEntry.w;
     const latestDate = new Date(latestEntry.dt);
@@ -487,91 +463,107 @@ html_content = f"""<!DOCTYPE html>
     let daysDiff = Math.max(1, (latestDate - histStartDate) / (1000 * 60 * 60 * 24));
     let weeksDiff = daysDiff / 7.0;
     let histLossLbs = histStartWeight - latestWeight;
-    let baseRatePerWeek = weeksDiff > 0 ? Math.max(0.1, histLossLbs / weeksDiff) : 0.5;
+    let baseRatePerWeek = weeksDiff > 0 ? Math.max(0.1, histLossLbs / weeksDiff) : 0.49;
 
-    document.getElementById('histRateText').textContent = `-${{baseRatePerWeek.toFixed(2)}}`;
-    document.getElementById('histLossDetail').textContent = `-${{histLossLbs.toFixed(1)}} lbs lost over the last ${{Math.round(daysDiff)}} days`;
-
-    const targetInput = document.getElementById('targetWeightInput');
     const stepSlider = document.getElementById('stepSlider');
     const stepValueBadge = document.getElementById('stepValueBadge');
-    const projectedDateText = document.getElementById('projectedDateText');
-    const projectedWeeksText = document.getElementById('projectedWeeksText');
-    const effectiveRateText = document.getElementById('effectiveRateText');
-    const savingsDetail = document.getElementById('savingsDetail');
-    const timeSavedSubtitle = document.getElementById('timeSavedSubtitle');
-    const acceleratorBadge = document.getElementById('acceleratorBadge');
-    const speedupPill = document.getElementById('speedupPill');
-    const goalTargetDisplay = document.getElementById('goalTargetDisplay');
-    const daysRemainingBadge = document.getElementById('daysRemainingBadge');
-    const bannerEmoji = document.getElementById('bannerEmoji');
-    const bannerSummary = document.getElementById('bannerSummary');
-    const bannerMetric = document.getElementById('bannerMetric');
+    const equationText = document.getElementById('equationText');
+    const equationSubtext = document.getElementById('equationSubtext');
+    const totalRateBadge = document.getElementById('totalRateBadge');
+    const milestoneSpeedBadge = document.getElementById('milestoneSpeedBadge');
+    const milestonesTableBody = document.getElementById('milestones-table-body');
 
-    function updateProjection() {{
-      const targetWeight = parseFloat(targetInput.value) || 190.0;
+    // Milestones list on even dividends of 5
+    const milestoneTargets = [215, 210, 205, 200, 195, 190, 185, 180, 175];
+
+    function renderMilestones() {{
       const extraSteps = parseInt(stepSlider.value) || 0;
+      const totalSteps = baselineAvgSteps + extraSteps;
       
-      goalTargetDisplay.textContent = `${{targetWeight.toFixed(1)}} lbs`;
-      stepValueBadge.textContent = `+${{extraSteps.toLocaleString()}} steps/day`;
+      stepValueBadge.textContent = `+${{extraSteps.toLocaleString()}} extra steps/day (Total: ${{totalSteps.toLocaleString()}})`;
 
-      const remainingWeight = Math.max(0, latestWeight - targetWeight);
-      
-      // Step calorie calculation: ~50 kcal per 1000 steps (~215 lbs person)
-      // 1 lb of fat = 3,500 kcal
+      // Extra burn: 50 kcal / 1k steps
       const extraDailyKcal = (extraSteps / 1000.0) * 50.0;
-      const extraWeeklyLbs = (extraDailyKcal * 7.0) / 3500.0;
-      
-      const totalWeeklyRate = baseRatePerWeek + extraWeeklyLbs;
-      effectiveRateText.textContent = `-${{totalWeeklyRate.toFixed(2)}}`;
+      const extraWeeklyLoss = (extraDailyKcal * 7.0) / 3500.0;
+      const totalRate = baseRatePerWeek + extraWeeklyLoss;
 
-      // Baseline weeks needed
-      const baseWeeksNeeded = remainingWeight / baseRatePerWeek;
-      const baseProjectedTime = new Date(latestDate.getTime() + baseWeeksNeeded * 7 * 24 * 60 * 60 * 1000);
-
-      // Accelerated weeks needed
-      const accelWeeksNeeded = remainingWeight / totalWeeklyRate;
-      const accelProjectedTime = new Date(latestDate.getTime() + accelWeeksNeeded * 7 * 24 * 60 * 60 * 1000);
-
-      const weeksSaved = Math.max(0, baseWeeksNeeded - accelWeeksNeeded);
-      const daysRemaining = Math.max(0, Math.round(accelWeeksNeeded * 7));
-
-      const dateOptions = {{ year: 'numeric', month: 'short', day: 'numeric' }};
-      projectedDateText.textContent = accelProjectedTime.toLocaleDateString('en-US', dateOptions);
-      projectedWeeksText.textContent = `~${{accelWeeksNeeded.toFixed(1)}} weeks remaining (${{remainingWeight.toFixed(1)}} lbs to go)`;
-      daysRemainingBadge.textContent = `${{daysRemaining}} days`;
+      totalRateBadge.textContent = `Total Rate: -${{totalRate.toFixed(2)}} lbs / week`;
 
       if (extraSteps === 0) {{
-        acceleratorBadge.textContent = 'Baseline Pace';
-        acceleratorBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-500';
-        speedupPill.textContent = 'Base';
-        speedupPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-slate-500/10 text-[var(--muted-foreground)]';
-        savingsDetail.textContent = 'Slide below to simulate step booster!';
-        timeSavedSubtitle.innerHTML = 'Time saved: <strong class="text-[var(--foreground)]">0 weeks</strong>';
-        bannerEmoji.textContent = '🎯';
-        bannerSummary.innerHTML = `Currently on track to hit <strong>${{targetWeight.toFixed(1)}} lbs</strong> on <strong>${{baseProjectedTime.toLocaleDateString('en-US', dateOptions)}}</strong> at your baseline pace.`;
-        bannerMetric.textContent = '+0 extra kcal/day';
-        bannerMetric.className = 'font-bold text-blue-500 text-right whitespace-nowrap';
+        equationText.innerHTML = `If you stay at your 45-day baseline of <strong>${{baselineAvgSteps.toLocaleString()}} steps/day</strong>, you lose <strong>0.49 lbs/week</strong>.`;
+        equationSubtext.innerHTML = `Slide above to simulate adding extra walking steps and see milestones accelerate in real time!`;
+        milestoneSpeedBadge.textContent = 'Baseline Pace (0.49 lb/wk)';
+        milestoneSpeedBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-500';
       }} else {{
-        const monthsSaved = (weeksSaved / 4.345).toFixed(1);
-        acceleratorBadge.textContent = `⚡ ${{weeksSaved.toFixed(0)}} Wks Faster`;
-        acceleratorBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500 animate-pulse';
-        speedupPill.textContent = `+${{extraWeeklyLbs.toFixed(2)}} lb/wk`;
-        speedupPill.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500';
-        savingsDetail.textContent = `🔥 Shaves off ${{weeksSaved.toFixed(1)}} weeks (~${{monthsSaved}} months sooner!)`;
-        timeSavedSubtitle.innerHTML = `Time saved: <strong class="text-emerald-500 font-bold">${{weeksSaved.toFixed(1)}} weeks sooner!</strong>`;
-        bannerEmoji.textContent = '🚀';
-        bannerSummary.innerHTML = `Boosted by <strong>+${{extraSteps.toLocaleString()}} steps/day</strong> (+${{extraWeeklyLbs.toFixed(2)}} lbs/wk), you will hit <strong>${{targetWeight.toFixed(1)}} lbs</strong> on <strong class="text-emerald-500">${{accelProjectedTime.toLocaleDateString('en-US', dateOptions)}}</strong>!`;
-        bannerMetric.textContent = `+${{Math.round(extraDailyKcal)}} kcal/day burned`;
-        bannerMetric.className = 'font-bold text-emerald-500 text-right whitespace-nowrap';
+        equationText.innerHTML = `If you increase your steps by <strong class="text-blue-500">+${{extraSteps.toLocaleString()}} extra/day</strong> (Total: <strong>${{totalSteps.toLocaleString()}}</strong>), you will lose an extra <strong class="text-emerald-500">+${{extraWeeklyLoss.toFixed(2)}} lbs/week</strong> (Total: <strong>${{totalRate.toFixed(2)}} lbs/wk</strong>)!`;
+        equationSubtext.innerHTML = `Burn an extra <strong>${{Math.round(extraDailyKcal)}} kcal/day</strong> (<strong>${{Math.round(extraDailyKcal * 7).toLocaleString()}} kcal/week</strong>).`;
+        milestoneSpeedBadge.textContent = `⚡ Boosted by +${{extraWeeklyLoss.toFixed(2)}} lb/wk`;
+        milestoneSpeedBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 animate-pulse';
       }}
+
+      // Clear table
+      milestonesTableBody.innerHTML = '';
+      const dateOptions = {{ year: 'numeric', month: 'short', day: 'numeric' }};
+
+      milestoneTargets.forEach(target => {{
+        const remainingLbs = Math.max(0, latestWeight - target);
+        
+        // Baseline time
+        const baseWeeks = remainingLbs / baseRatePerWeek;
+        const baseDate = new Date(latestDate.getTime() + baseWeeks * 7 * 24 * 60 * 60 * 1000);
+
+        // Accelerated time
+        const accelWeeks = remainingLbs / totalRate;
+        const accelDate = new Date(latestDate.getTime() + accelWeeks * 7 * 24 * 60 * 60 * 1000);
+
+        const weeksSaved = Math.max(0, baseWeeks - accelWeeks);
+        const monthsSaved = (weeksSaved / 4.345).toFixed(1);
+
+        let specialTag = '';
+        if (target === 200) {{
+          specialTag = '<span class="ml-2 px-2 py-0.5 text-[10px] font-extrabold bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-md uppercase">Onederland 🎉</span>';
+        }} else if (target === 190) {{
+          specialTag = '<span class="ml-2 px-2 py-0.5 text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md uppercase">Target Goal 🎯</span>';
+        }}
+
+        let timeSavedHtml = '<span class="text-[var(--muted-foreground)] font-medium">0 days</span>';
+        if (extraSteps > 0) {{
+          if (weeksSaved < 1.0) {{
+            timeSavedHtml = `<span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 font-extrabold text-xs">⚡ ${{Math.round(weeksSaved * 7)}} days sooner</span>`;
+          }} else {{
+            timeSavedHtml = `<span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 font-extrabold text-xs">⚡ ${{weeksSaved.toFixed(1)}} wks (${{monthsSaved}} mo) sooner</span>`;
+          }}
+        }}
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-[var(--background)]/50 transition-colors';
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-base flex items-center">
+            ${{target.toFixed(0)}} lbs ${{specialTag}}
+          </td>
+          <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+            -${{remainingLbs.toFixed(1)}} lbs
+          </td>
+          <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+            ${{baseDate.toLocaleDateString('en-US', dateOptions)}}
+            <span class="text-xs block text-[var(--muted-foreground)]/70">~${{baseWeeks.toFixed(1)}} wks</span>
+          </td>
+          <td class="py-3 px-4 font-bold ${{extraSteps > 0 ? 'text-emerald-500' : 'text-[var(--foreground)]'}}">
+            ${{accelDate.toLocaleDateString('en-US', dateOptions)}}
+            <span class="text-xs block font-medium opacity-80">~${{accelWeeks.toFixed(1)}} wks</span>
+          </td>
+          <td class="py-3 px-4 text-right">
+            ${{timeSavedHtml}}
+          </td>
+        `;
+        milestonesTableBody.appendChild(tr);
+      }});
     }}
 
-    targetInput.addEventListener('input', updateProjection);
-    stepSlider.addEventListener('input', updateProjection);
+    stepSlider.addEventListener('input', renderMilestones);
 
-    // Initial calculations
-    updateProjection();
+    // Initial render
+    renderMilestones();
 
     // Initial draw
     setTimeout(resizeCanvas, 50);
