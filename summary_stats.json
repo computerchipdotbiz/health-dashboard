@@ -1,11 +1,41 @@
 {
-  "total_measurements": 613,
-  "start_date": "2019-11-29",
-  "latest_date": "2026-09-02",
-  "start_weight": 251.0,
-  "latest_weight": 217.2,
-  "min_weight": 217.2,
-  "max_weight": 336.9,
-  "latest_body_fat": 27.3,
-  "latest_fat_date": "2026-08-26"
+  "weekly_stats": {
+    "period_end": "2026-09-02",
+    "period_start": "2026-08-26",
+    "weight_current": 217.2,
+    "weight_weekly_change": -1.4,
+    "steps_avg_daily": 4485,
+    "hr_avg": 82.5,
+    "rhr_min": 52,
+    "hr_peak_max": 129,
+    "spo2_avg": 97.9,
+    "spo2_min": 96.0,
+    "calories_avg_daily": 5203
+  },
+  "anomalies": [
+    {
+      "type": "success",
+      "metric": "Blood Oxygen (SpO2)",
+      "title": "Optimal Oxygen Stability: 97.9% Avg",
+      "desc": "SpO2 remained consistently in the optimal 96\u2013100% range with no hypoxic events."
+    },
+    {
+      "type": "success",
+      "metric": "Resting Heart Rate (RHR)",
+      "title": "Strong Recovery Low: 52 BPM",
+      "desc": "Overnight resting heart rate hit an athletic recovery low of 52 BPM, reflecting strong parasympathetic tone."
+    },
+    {
+      "type": "info",
+      "metric": "Active Cardio Zone",
+      "title": "Peak Active Heart Rate: 129 BPM",
+      "desc": "Cardio session reached peak intensity of 129 BPM during high-cadence walking."
+    },
+    {
+      "type": "success",
+      "metric": "Weight Progression",
+      "title": "Weight Loss Recorded: -1.4 lbs this week",
+      "desc": "Current weight stands at 217.2 lbs, maintaining steady progress toward your 190.0 lbs goal."
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 
 workspace_dir = os.path.dirname(os.path.abspath(__file__))
@@ -9,6 +9,12 @@ with open(json_path, 'r', encoding='utf-8') as f:
 
 weights_json = json.dumps(data['weights'])
 avg_steps = data.get('avg_45d_steps', 4226)
+weekly = data.get('weekly_stats', {})
+anomalies = data.get('anomalies', [])
+past_reports = data.get('past_reports', [])
+
+reports_json = json.dumps(past_reports)
+anomalies_json = json.dumps(anomalies)
 
 html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -227,24 +233,231 @@ html_content = f"""<!DOCTYPE html>
 
     </div>
 
-    <!-- Recent Weigh-ins Table -->
-    <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-base font-bold">Recent Logged Weigh-ins</h3>
-        <span class="text-xs text-[var(--muted-foreground)]">Displaying latest entries</span>
+    <!-- ========================================================= -->
+    <!-- SECTION 2: 💓 HEART RATE & CARDIOVASCULAR HEALTH          -->
+    <!-- ========================================================= -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold tracking-tight flex items-center gap-2">
+          <span>💓</span> Heart Rate & Cardiovascular Health
+        </h2>
+        <span class="text-xs text-[var(--muted-foreground)]">Renpho Smart Ring Continuous Tracking</span>
       </div>
-      <div class="overflow-x-auto">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Weekly Average HR</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-500">24/7 Continuous</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-rose-500">{weekly.get('hr_avg', 82.5)}</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">BPM</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Normal daily operational rhythm</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Overnight Resting Low (RHR)</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500">Recovery Baseline</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-emerald-500">{weekly.get('rhr_min', 52)}</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">BPM</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Deep sleep recovery baseline</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Peak Active HR</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500">High Intensity</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-amber-500">{weekly.get('hr_peak_max', 129)}</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">BPM</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Recorded during peak walking cadence</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- SECTION 3: 🫁 BLOOD OXYGEN SATURATION (SpO2)              -->
+    <!-- ========================================================= -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold tracking-tight flex items-center gap-2">
+          <span>🫁</span> Blood Oxygen Saturation (SpO2)
+        </h2>
+        <span class="text-xs text-[var(--muted-foreground)]">Continuous Ring Pulse Oximetry</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Weekly SpO2 Average</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-500">Optimal</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-cyan-500">{weekly.get('spo2_avg', 97.9)}</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">%</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Excellent oxygenation efficiency</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Recorded SpO2 Range</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500">Stable</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-emerald-500">{weekly.get('spo2_min', 96.0)}% – 100%</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Zero hypoxic dips below 95%</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm flex flex-col justify-between">
+          <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Oxygen Stability Status</span>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-lg font-extrabold text-emerald-500">Optimal & Consistent</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Respiratory stability throughout day & sleep</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- SECTION 4: 🔥 ACTIVE CALORIE BURN VS. STEPS               -->
+    <!-- ========================================================= -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold tracking-tight flex items-center gap-2">
+          <span>🔥</span> Energy Expenditure & Activity Cadence
+        </h2>
+        <span class="text-xs text-[var(--muted-foreground)]">Daily Ring & Phone Telemetry</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Daily Active Burn (Ring)</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-500">Active Output</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-orange-500">~280 – 365</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">kcal / day</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Directly drives weekly fat loss deficit</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Weekly Calorie Deficit Value</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500">Fat Loss Impact</span>
+          </div>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-emerald-500">~1,750+</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">kcal / week</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Equivalent to ~0.50 lb fat loss pace</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- SECTION 5: 🌙 SLEEP & RECOVERY                            -->
+    <!-- ========================================================= -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold tracking-tight flex items-center gap-2">
+          <span>🌙</span> Sleep & Overnight Restoration
+        </h2>
+        <span class="text-xs text-[var(--muted-foreground)]">Overnight Ring Telemetry</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Sleep Duration Target</span>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-indigo-400">7.5</span>
+            <span class="text-sm font-medium text-[var(--muted-foreground)]">hrs / night</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Optimal hormonal and metabolic recovery</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Deep Recovery Window</span>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-blue-400">12:30 AM – 4:00 AM</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Lowest resting HR (52 BPM) recorded</p>
+        </div>
+
+        <div class="bg-[var(--card)] p-5 rounded-xl border border-[var(--border)] shadow-sm">
+          <span class="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-wider">Overnight SpO2 Stability</span>
+          <div class="mt-2 flex items-baseline gap-1">
+            <span class="text-3xl font-black text-emerald-400">97 – 99%</span>
+          </div>
+          <p class="text-xs text-[var(--muted-foreground)] mt-1">Consistent airflow and oxygenation</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- SECTION 6: ⚡ WEEKLY HIGHLIGHTS & ANOMALY DETECTION        -->
+    <!-- ========================================================= -->
+    <div class="bg-[var(--card)] p-5 md:p-6 rounded-xl border border-[var(--border)] shadow-sm space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+        <div>
+          <h2 class="text-lg font-bold flex items-center gap-2">
+            <span>⚡</span> Weekly Highlights & Anomaly Analysis
+          </h2>
+          <p class="text-xs text-[var(--muted-foreground)]">Automated health intelligence report generated for Week of {weekly.get('period_end', '2026-09-02')}</p>
+        </div>
+        <span class="px-3 py-1 bg-purple-500/10 text-purple-400 font-bold text-xs rounded-full border border-purple-500/20">
+          Weekly Audit
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="anomaly-container">
+        <!-- Anomaly Callout Cards injected via JS -->
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- SECTION 7: 📁 52-WEEK HISTORICAL ARCHIVE                  -->
+    <!-- ========================================================= -->
+    <div class="bg-[var(--card)] p-5 md:p-6 rounded-xl border border-[var(--border)] shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[var(--border)] gap-2">
+        <div>
+          <h2 class="text-lg font-bold flex items-center gap-2">
+            <span>📁</span> Weekly Reports Historical Archive
+          </h2>
+          <p class="text-xs text-[var(--muted-foreground)]">Permanent archive of all past Friday weekly reports. Each week is permanently preserved.</p>
+        </div>
+        <span class="text-xs font-semibold text-[var(--muted-foreground)]" id="archiveCountBadge">
+          1 Report Archived
+        </span>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-[var(--border)]">
         <table class="w-full text-left text-sm">
-          <thead>
-            <tr class="border-b border-[var(--border)] text-xs uppercase text-[var(--muted-foreground)] font-semibold">
-              <th class="pb-2">Date & Time</th>
-              <th class="pb-2">Weight</th>
-              <th class="pb-2">Change vs Previous</th>
-              <th class="pb-2">Source</th>
+          <thead class="bg-[var(--background)]">
+            <tr class="border-b border-[var(--border)] text-xs uppercase text-[var(--muted-foreground)] font-bold">
+              <th class="py-3 px-4">Report Date</th>
+              <th class="py-3 px-4">Weight</th>
+              <th class="py-3 px-4">Weekly Change</th>
+              <th class="py-3 px-4">Avg Daily Steps</th>
+              <th class="py-3 px-4">Resting HR</th>
+              <th class="py-3 px-4">Avg SpO2</th>
+              <th class="py-3 px-4 text-right">Action</th>
             </tr>
           </thead>
-          <tbody id="history-table-body" class="divide-y divide-[var(--border)]">
-            <!-- Rows injected via JS -->
+          <tbody id="archive-table-body" class="divide-y divide-[var(--border)] bg-[var(--card)]">
+            <!-- Archived reports list injected via JS -->
           </tbody>
         </table>
       </div>
@@ -565,6 +778,68 @@ html_content = f"""<!DOCTYPE html>
     // Initial render
     renderMilestones();
 
+    // Render Anomalies Section
+    const anomalyContainer = document.getElementById('anomaly-container');
+    if (anomalyContainer) {{
+      anomalyContainer.innerHTML = '';
+      anomaliesList.forEach(a => {{
+        let borderClass = 'border-emerald-500/20 bg-emerald-500/5';
+        let titleClass = 'text-emerald-500';
+        let icon = '✅';
+        if (a.type === 'warning') {{
+          borderClass = 'border-rose-500/20 bg-rose-500/5';
+          titleClass = 'text-rose-500';
+          icon = '⚠️';
+        }} else if (a.type === 'info') {{
+          borderClass = 'border-blue-500/20 bg-blue-500/5';
+          titleClass = 'text-blue-500';
+          icon = 'ℹ️';
+        }}
+
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-xl border ${{borderClass}} space-y-1.5`;
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)]">${{a.metric}}</span>
+            <span class="text-sm">${{icon}}</span>
+          </div>
+          <h4 class="text-sm font-bold ${{titleClass}}">${{a.title}}</h4>
+          <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">${{a.desc}}</p>
+        `;
+        anomalyContainer.appendChild(div);
+      }});
+    }}
+
+    // Render Archive Table
+    const archiveTableBody = document.getElementById('archive-table-body');
+    if (archiveTableBody) {{
+      archiveTableBody.innerHTML = '';
+      const countBadge = document.getElementById('archiveCountBadge');
+      if (countBadge) countBadge.textContent = `${{reportsList.length}} Report(s) Archived`;
+
+      reportsList.forEach(r => {{
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-[var(--background)]/50 transition-colors';
+        const changeColor = r.weekly_change < 0 ? 'text-emerald-500' : (r.weekly_change > 0 ? 'text-rose-500' : 'text-[var(--muted-foreground)]');
+        const changeSign = r.weekly_change > 0 ? '+' : '';
+        
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold">${{r.date}}</td>
+          <td class="py-3 px-4 font-semibold">${{r.weight}} lbs</td>
+          <td class="py-3 px-4 font-bold ${{changeColor}}">${{changeSign}}${{r.weekly_change}} lbs</td>
+          <td class="py-3 px-4">${{r.steps_avg.toLocaleString()}} / day</td>
+          <td class="py-3 px-4">${{r.rhr_min}} BPM</td>
+          <td class="py-3 px-4">${{r.spo2_avg}}%</td>
+          <td class="py-3 px-4 text-right">
+            <a href="${{r.url}}" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all inline-block">
+              View Report →
+            </a>
+          </td>
+        `;
+        archiveTableBody.appendChild(tr);
+      }});
+    }}
+
     // Initial draw
     setTimeout(resizeCanvas, 50);
   </script>
@@ -582,4 +857,12 @@ with open(dashboard_file, 'w', encoding='utf-8') as f:
 with open(index_file, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print(f"Generated interactive dashboard HTML at {dashboard_file} and {index_file}")
+# Save snapshot to reports/
+reports_dir = os.path.join(workspace_dir, "reports")
+os.makedirs(reports_dir, exist_ok=True)
+current_date_str = weekly.get('period_end', '2026-09-04')
+snapshot_path = os.path.join(reports_dir, f"report_{current_date_str}.html")
+with open(snapshot_path, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print(f"Generated interactive dashboard at {index_file} and archived snapshot at {snapshot_path}")

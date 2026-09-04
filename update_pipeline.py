@@ -25,9 +25,9 @@ def push_to_github():
 
     res = subprocess.run(['git', 'remote', 'get-url', 'origin'], cwd=WORKSPACE_DIR, capture_output=True, text=True)
     if res.returncode == 0 and res.stdout.strip():
-        subprocess.run(['git', 'add', 'index.html', 'dashboard_data.json', 'clean_weight_history.csv', 'clean_body_fat_history.csv', 'daily_scale_summary.csv', 'summary_stats.json'], cwd=WORKSPACE_DIR)
+        subprocess.run(['git', 'add', '-A'], cwd=WORKSPACE_DIR)
         now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-        subprocess.run(['git', 'commit', '-m', f'Automated sync update {now_str}'], cwd=WORKSPACE_DIR)
+        subprocess.run(['git', 'commit', '-m', f'Automated sync & weekly report archive {now_str}'], cwd=WORKSPACE_DIR)
         push_res = subprocess.run(['git', 'push', 'origin', 'main'], cwd=WORKSPACE_DIR, capture_output=True, text=True)
         if push_res.returncode == 0:
             print("[SUCCESS] Pushed latest update to GitHub Pages!")
