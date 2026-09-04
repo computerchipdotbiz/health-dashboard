@@ -479,15 +479,31 @@ html_content = f"""<!DOCTYPE html>
     const tooltip = document.getElementById('chartTooltip');
 
     function resizeCanvas() {{
-      const rect = canvas.parentElement.getBoundingClientRect();
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height || 320;
+      if (!width || !height) return;
+
       const dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
       drawChart();
     }}
 
+    const chartBoxEl = document.getElementById('chart-box');
+    if (chartBoxEl && window.ResizeObserver) {{
+      new ResizeObserver(() => resizeCanvas()).observe(chartBoxEl);
+    }}
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load', resizeCanvas);
+    document.addEventListener('DOMContentLoaded', resizeCanvas);
 
     function getFilteredData() {{
       if (activeDays === 'all') return allData;
@@ -840,8 +856,11 @@ html_content = f"""<!DOCTYPE html>
       }});
     }}
 
-    // Initial draw
-    setTimeout(resizeCanvas, 50);
+    // Immediate and layout settled draws
+    resizeCanvas();
+    requestAnimationFrame(resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+    setTimeout(resizeCanvas, 400);
   </script>
 </body>
 </html>
