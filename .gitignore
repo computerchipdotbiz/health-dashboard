@@ -1,0 +1,9 @@
+# Sensitive OAuth tokens and credentials
+token.json
+credentials.json
+fit_health_data.csv
+
+# Python cache
+__pycache__/
+*.pyc
+.system_generated/
