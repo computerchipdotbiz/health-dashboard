@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import pandas as pd
 import datetime
@@ -84,6 +84,7 @@ with open(archive_file, 'w', encoding='utf-8') as f:
     json.dump(past_reports, f, indent=2)
 
 payload = {
+    'last_updated': datetime.datetime.now().strftime('%b %d, %Y'),
     'weights': weight_data,
     'body_fat': fat_data,
     'avg_45d_steps': avg_45d_steps,

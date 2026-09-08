@@ -16,6 +16,7 @@ past_reports = data.get('past_reports', [])
 
 reports_json = json.dumps(past_reports)
 anomalies_json = json.dumps(anomalies)
+refreshed_on = data.get('last_updated', datetime.datetime.now().strftime('%b %d, %Y'))
 
 # Server-side milestone generation (Progressive enhancement fallback)
 all_weights = sorted(data['weights'], key=lambda x: x['dt'])
@@ -133,7 +134,7 @@ html_content = f"""<!DOCTYPE html>
           <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
           <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Renpho & Google Fit Health Analytics</h1>
         </div>
-        <p class="text-sm text-[var(--muted-foreground)] mt-1">Live synchronized scale metrics, weight trends & interactive 5-lb milestone forecasts</p>
+        <p class="text-sm text-[var(--muted-foreground)] mt-1">Live synchronized scale metrics, weight trends & interactive 5-lb milestone forecasts • <span class="font-semibold text-emerald-500">Data refreshed on {refreshed_on}</span></p>
       </div>
       <div class="flex items-center gap-2">
         <span class="px-3.5 py-1 bg-emerald-500/10 text-emerald-500 font-semibold text-xs rounded-full border border-emerald-500/20">
