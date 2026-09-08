@@ -468,6 +468,8 @@ html_content = f"""<!DOCTYPE html>
   <script>
     const allData = {weights_json};
     const baselineAvgSteps = {avg_steps};
+    const anomaliesList = {anomalies_json};
+    const reportsList = {reports_json};
     
     // Sort ascending
     allData.sort((a, b) => new Date(a.dt) - new Date(b.dt));
@@ -483,7 +485,7 @@ html_content = f"""<!DOCTYPE html>
       if (!parent) return;
       const rect = parent.getBoundingClientRect();
       const width = rect.width;
-      const height = rect.height || 320;
+      const height = rect.height || 340;
       if (!width || !height) return;
 
       const dpr = window.devicePixelRatio || 1;
@@ -653,33 +655,34 @@ html_content = f"""<!DOCTYPE html>
       }});
     }});
 
-    // Populate History Table
+    // Populate History Table (if exists)
     const tableBody = document.getElementById('history-table-body');
-    const recentEntries = [...allData].reverse().slice(0, 10);
-    
-    recentEntries.forEach((entry, idx) => {{
-      const prev = idx < recentEntries.length - 1 ? recentEntries[idx + 1].w : entry.w;
-      const diff = entry.w - prev;
-      let diffHtml = '<span class="text-[var(--muted-foreground)]">-</span>';
-      if (diff > 0) {{
-        diffHtml = `<span class="text-rose-500 font-medium">+${{diff.toFixed(1)}} lbs</span>`;
-      }} else if (diff < 0) {{
-        diffHtml = `<span class="text-emerald-500 font-medium">${{diff.toFixed(1)}} lbs</span>`;
-      }}
+    if (tableBody) {{
+      const recentEntries = [...allData].reverse().slice(0, 10);
+      recentEntries.forEach((entry, idx) => {{
+        const prev = idx < recentEntries.length - 1 ? recentEntries[idx + 1].w : entry.w;
+        const diff = entry.w - prev;
+        let diffHtml = '<span class="text-[var(--muted-foreground)]">-</span>';
+        if (diff > 0) {{
+          diffHtml = `<span class="text-rose-500 font-medium">+${{diff.toFixed(1)}} lbs</span>`;
+        }} else if (diff < 0) {{
+          diffHtml = `<span class="text-emerald-500 font-medium">${{diff.toFixed(1)}} lbs</span>`;
+        }}
 
-      const tr = document.createElement('tr');
-      tr.className = 'hover:bg-[var(--background)]/50 transition-colors';
-      tr.innerHTML = `
-        <td class="py-2.5 font-medium">${{entry.dt}}</td>
-        <td class="py-2.5 font-semibold text-[var(--foreground)]">${{entry.w}} lbs</td>
-        <td class="py-2.5">${{diffHtml}}</td>
-        <td class="py-2.5"><span class="px-2 py-0.5 rounded text-xs bg-slate-500/10 text-[var(--muted-foreground)]">Renpho / Fit</span></td>
-      `;
-      tableBody.appendChild(tr);
-    }});
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-[var(--background)]/50 transition-colors';
+        tr.innerHTML = `
+          <td class="py-2.5 font-medium">${{entry.dt}}</td>
+          <td class="py-2.5 font-semibold text-[var(--foreground)]">${{entry.w}} lbs</td>
+          <td class="py-2.5">${{diffHtml}}</td>
+          <td class="py-2.5"><span class="px-2 py-0.5 rounded text-xs bg-slate-500/10 text-[var(--muted-foreground)]">Renpho / Fit</span></td>
+        `;
+        tableBody.appendChild(tr);
+      }});
+    }}
 
     // === 5-LB MILESTONE & STEP BOOSTER ENGINE ===
-    const latestEntry = allData[allData.length - 1];
+    const latestEntry = allData && allData.length > 0 ? allData[allData.length - 1] : {{ w: 217.2, dt: '2026-09-02' }};
     const latestWeight = latestEntry.w;
     const latestDate = new Date(latestEntry.dt);
 
@@ -692,7 +695,7 @@ html_content = f"""<!DOCTYPE html>
     let daysDiff = Math.max(1, (latestDate - histStartDate) / (1000 * 60 * 60 * 24));
     let weeksDiff = daysDiff / 7.0;
     let histLossLbs = histStartWeight - latestWeight;
-    let baseRatePerWeek = weeksDiff > 0 ? Math.max(0.1, histLossLbs / weeksDiff) : 0.49;
+    let baseRatePerWeek = weeksDiff > 0 && histLossLbs > 0 ? Math.max(0.2, histLossLbs / weeksDiff) : 0.49;
 
     const stepSlider = document.getElementById('stepSlider');
     const stepValueBadge = document.getElementById('stepValueBadge');
@@ -702,35 +705,46 @@ html_content = f"""<!DOCTYPE html>
     const milestoneSpeedBadge = document.getElementById('milestoneSpeedBadge');
     const milestonesTableBody = document.getElementById('milestones-table-body');
 
-    // Milestones list on even dividends of 5
+    // Generate dynamic 5-lb milestone targets down to 175 lbs
     const milestoneTargets = [215, 210, 205, 200, 195, 190, 185, 180, 175];
 
     function renderMilestones() {{
+      if (!stepSlider || !milestonesTableBody) return;
       const extraSteps = parseInt(stepSlider.value) || 0;
       const totalSteps = baselineAvgSteps + extraSteps;
       
-      stepValueBadge.textContent = `+${{extraSteps.toLocaleString()}} extra steps/day (Total: ${{totalSteps.toLocaleString()}})`;
+      if (stepValueBadge) {{
+        stepValueBadge.textContent = `+${{extraSteps.toLocaleString()}} extra steps/day (Total: ${{totalSteps.toLocaleString()}})`;
+      }}
 
       // Extra burn: 50 kcal / 1k steps
       const extraDailyKcal = (extraSteps / 1000.0) * 50.0;
       const extraWeeklyLoss = (extraDailyKcal * 7.0) / 3500.0;
       const totalRate = baseRatePerWeek + extraWeeklyLoss;
 
-      totalRateBadge.textContent = `Total Rate: -${{totalRate.toFixed(2)}} lbs / week`;
-
-      if (extraSteps === 0) {{
-        equationText.innerHTML = `If you stay at your 45-day baseline of <strong>${{baselineAvgSteps.toLocaleString()}} steps/day</strong>, you lose <strong>0.49 lbs/week</strong>.`;
-        equationSubtext.innerHTML = `Slide above to simulate adding extra walking steps and see milestones accelerate in real time!`;
-        milestoneSpeedBadge.textContent = 'Baseline Pace (0.49 lb/wk)';
-        milestoneSpeedBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-500';
-      }} else {{
-        equationText.innerHTML = `If you increase your steps by <strong class="text-blue-500">+${{extraSteps.toLocaleString()}} extra/day</strong> (Total: <strong>${{totalSteps.toLocaleString()}}</strong>), you will lose an extra <strong class="text-emerald-500">+${{extraWeeklyLoss.toFixed(2)}} lbs/week</strong> (Total: <strong>${{totalRate.toFixed(2)}} lbs/wk</strong>)!`;
-        equationSubtext.innerHTML = `Burn an extra <strong>${{Math.round(extraDailyKcal)}} kcal/day</strong> (<strong>${{Math.round(extraDailyKcal * 7).toLocaleString()}} kcal/week</strong>).`;
-        milestoneSpeedBadge.textContent = `⚡ Boosted by +${{extraWeeklyLoss.toFixed(2)}} lb/wk`;
-        milestoneSpeedBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 animate-pulse';
+      if (totalRateBadge) {{
+        totalRateBadge.textContent = `Total Rate: -${{totalRate.toFixed(2)}} lbs / week`;
       }}
 
-      // Clear table
+      if (equationText && equationSubtext) {{
+        if (extraSteps === 0) {{
+          equationText.innerHTML = `If you stay at your 45-day baseline of <strong>${{baselineAvgSteps.toLocaleString()}} steps/day</strong>, your loss rate is <strong>-${{baseRatePerWeek.toFixed(2)}} lbs/week</strong>.`;
+          equationSubtext.innerHTML = `Slide above to simulate adding extra walking steps and see milestones accelerate in real time!`;
+          if (milestoneSpeedBadge) {{
+            milestoneSpeedBadge.textContent = `Baseline Pace (-${{baseRatePerWeek.toFixed(2)}} lb/wk)`;
+            milestoneSpeedBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-500';
+          }}
+        }} else {{
+          equationText.innerHTML = `If you increase your steps by <strong class="text-blue-500">+${{extraSteps.toLocaleString()}} extra/day</strong> (Total: <strong>${{totalSteps.toLocaleString()}}</strong>), you accelerate weight loss by <strong class="text-emerald-500">+${{extraWeeklyLoss.toFixed(2)}} lbs/week</strong>!`;
+          equationSubtext.innerHTML = `Burns an extra <strong>${{Math.round(extraDailyKcal)}} kcal/day</strong> (<strong>${{Math.round(extraDailyKcal * 7).toLocaleString()}} kcal/week</strong>). Total loss pace: <strong>-${{totalRate.toFixed(2)}} lbs/week</strong>.`;
+          if (milestoneSpeedBadge) {{
+            milestoneSpeedBadge.textContent = `⚡ Boosted by +${{extraWeeklyLoss.toFixed(2)}} lb/wk`;
+            milestoneSpeedBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 animate-pulse';
+          }}
+        }}
+      }}
+
+      // Clear and populate table
       milestonesTableBody.innerHTML = '';
       const dateOptions = {{ year: 'numeric', month: 'short', day: 'numeric' }};
 
@@ -789,14 +803,17 @@ html_content = f"""<!DOCTYPE html>
       }});
     }}
 
-    stepSlider.addEventListener('input', renderMilestones);
+    if (stepSlider) {{
+      stepSlider.addEventListener('input', renderMilestones);
+      stepSlider.addEventListener('change', renderMilestones);
+    }}
 
-    // Initial render
+    // Initial render of milestones
     renderMilestones();
 
     // Render Anomalies Section
     const anomalyContainer = document.getElementById('anomaly-container');
-    if (anomalyContainer) {{
+    if (anomalyContainer && typeof anomaliesList !== 'undefined') {{
       anomalyContainer.innerHTML = '';
       anomaliesList.forEach(a => {{
         let borderClass = 'border-emerald-500/20 bg-emerald-500/5';
@@ -828,7 +845,7 @@ html_content = f"""<!DOCTYPE html>
 
     // Render Archive Table
     const archiveTableBody = document.getElementById('archive-table-body');
-    if (archiveTableBody) {{
+    if (archiveTableBody && typeof reportsList !== 'undefined') {{
       archiveTableBody.innerHTML = '';
       const countBadge = document.getElementById('archiveCountBadge');
       if (countBadge) countBadge.textContent = `${{reportsList.length}} Report(s) Archived`;
@@ -843,9 +860,9 @@ html_content = f"""<!DOCTYPE html>
           <td class="py-3 px-4 font-bold">${{r.date}}</td>
           <td class="py-3 px-4 font-semibold">${{r.weight}} lbs</td>
           <td class="py-3 px-4 font-bold ${{changeColor}}">${{changeSign}}${{r.weekly_change}} lbs</td>
-          <td class="py-3 px-4">${{r.steps_avg.toLocaleString()}} / day</td>
-          <td class="py-3 px-4">${{r.rhr_min}} BPM</td>
-          <td class="py-3 px-4">${{r.spo2_avg}}%</td>
+          <td class="py-3 px-4">${{(r.steps_avg || 0).toLocaleString()}} / day</td>
+          <td class="py-3 px-4">${{r.rhr_min || '--'}} BPM</td>
+          <td class="py-3 px-4">${{r.spo2_avg || '--'}}%</td>
           <td class="py-3 px-4 text-right">
             <a href="${{r.url}}" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all inline-block">
               View Report →
