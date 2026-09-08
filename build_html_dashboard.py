@@ -90,6 +90,36 @@ html_content = f"""<!DOCTYPE html>
   <title>Renpho & Google Fit Health Analytics</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
+    :root {{
+      --background: #061a17;
+      --card: #0b2723;
+      --card-inner: #071f1c;
+      --border: #164e45;
+      --foreground: #f0fdfa;
+      --muted-foreground: #99f6e4;
+      --accent-seafoam: #2dd4bf;
+      --accent-mint: #5eead4;
+    }}
+    body {{
+      background-color: #061a17 !important;
+      color: #f0fdfa !important;
+    }}
+    .bg-\\[var\\(--background\\)\\] {{
+      background-color: #071f1c !important;
+    }}
+    .bg-\\[var\\(--card\\)\\] {{
+      background-color: #0b2723 !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    }}
+    .border-\\[var\\(--border\\)\\] {{
+      border-color: #164e45 !important;
+    }}
+    .text-\\[var\\(--foreground\\)\\] {{
+      color: #f0fdfa !important;
+    }}
+    .text-\\[var\\(--muted-foreground\\)\\] {{
+      color: #99f6e4 !important;
+    }}
     .chart-container {{
       position: relative;
       width: 100%;
@@ -103,18 +133,21 @@ html_content = f"""<!DOCTYPE html>
     .tooltip {{
       position: absolute;
       pointer-events: none;
-      background: rgba(15, 23, 42, 0.94);
-      color: #fff;
+      background: rgba(7, 31, 28, 0.96) !important;
+      color: #f0fdfa !important;
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 12px;
       line-height: 1.4;
       display: none;
       transform: translate(-50%, -120%);
-      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.6);
       z-index: 50;
       white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid #2dd4bf !important;
+    }}
+    input[type=range] {{
+      accent-color: #2dd4bf;
     }}
     input[type=range]::-webkit-slider-thumb {{
       cursor: grab;
@@ -124,20 +157,20 @@ html_content = f"""<!DOCTYPE html>
     }}
   </style>
 </head>
-<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4 md:p-6 min-h-screen">
+<body class="bg-[#061a17] text-[#f0fdfa] antialiased p-4 md:p-6 min-h-screen">
   <div class="max-w-6xl mx-auto space-y-6">
     
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-[var(--border)] gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-[#164e45] gap-4">
       <div>
         <div class="flex items-center gap-2.5">
-          <span class="inline-block w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Renpho & Google Fit Health Analytics</h1>
+          <span class="inline-block w-3 h-3 rounded-full bg-[#2dd4bf] animate-pulse shadow-sm shadow-teal-400"></span>
+          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-[#f0fdfa]">Renpho & Google Fit Health Analytics</h1>
         </div>
-        <p class="text-sm text-[var(--muted-foreground)] mt-1">Live synchronized scale metrics, weight trends & interactive 5-lb milestone forecasts • <span class="font-semibold text-emerald-500">Data refreshed on {refreshed_on}</span></p>
+        <p class="text-sm text-[#99f6e4] mt-1">Live synchronized scale metrics, weight trends & interactive 5-lb milestone forecasts • <span class="font-semibold text-[#2dd4bf]">Data refreshed on {refreshed_on}</span></p>
       </div>
       <div class="flex items-center gap-2">
-        <span class="px-3.5 py-1 bg-emerald-500/10 text-emerald-500 font-semibold text-xs rounded-full border border-emerald-500/20">
+        <span class="px-3.5 py-1 bg-[#14b8a6]/20 text-[#2dd4bf] font-bold text-xs rounded-full border border-[#2dd4bf]/40 shadow-sm">
           613 Scale Measurements Synced
         </span>
       </div>
@@ -608,8 +641,8 @@ html_content = f"""<!DOCTYPE html>
       const timeSpan = maxTime - minTime || 1;
 
       // Draw Grid Lines & Y-axis labels
-      ctx.strokeStyle = 'rgba(150, 150, 150, 0.15)';
-      ctx.fillStyle = 'rgba(150, 150, 150, 0.8)';
+      ctx.strokeStyle = 'rgba(45, 212, 191, 0.15)';
+      ctx.fillStyle = 'rgba(153, 246, 228, 0.85)';
       ctx.font = '11px sans-serif';
       ctx.textAlign = 'right';
 
@@ -643,10 +676,10 @@ html_content = f"""<!DOCTYPE html>
         return {{ x, y, pt }};
       }});
 
-      // Draw Area Gradient
+      // Draw Seafoam Area Gradient
       const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartHeight);
-      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
-      gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+      gradient.addColorStop(0, 'rgba(45, 212, 191, 0.35)');
+      gradient.addColorStop(1, 'rgba(45, 212, 191, 0.0)');
 
       ctx.beginPath();
       ctx.moveTo(plottedPoints[0].x, padding.top + chartHeight);
@@ -656,9 +689,9 @@ html_content = f"""<!DOCTYPE html>
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      // Draw Line
+      // Draw Seafoam Line
       ctx.beginPath();
-      ctx.strokeStyle = '#3b82f6';
+      ctx.strokeStyle = '#2dd4bf';
       ctx.lineWidth = 2.5;
       plottedPoints.forEach((p, idx) => {{
         if (idx === 0) ctx.moveTo(p.x, p.y);
@@ -666,14 +699,14 @@ html_content = f"""<!DOCTYPE html>
       }});
       ctx.stroke();
 
-      // Draw Dots
+      // Draw Seafoam Dots
       if (plottedPoints.length < 100) {{
         plottedPoints.forEach(p => {{
           ctx.beginPath();
           ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = '#1d4ed8';
+          ctx.fillStyle = '#14b8a6';
           ctx.fill();
-          ctx.strokeStyle = '#fff';
+          ctx.strokeStyle = '#f0fdfa';
           ctx.lineWidth = 1.5;
           ctx.stroke();
         }});
@@ -705,7 +738,7 @@ html_content = f"""<!DOCTYPE html>
         tooltip.style.display = 'block';
         tooltip.style.left = closest.x + 'px';
         tooltip.style.top = closest.y + 'px';
-        tooltip.innerHTML = `<strong>${{closest.pt.w}} lbs</strong><br><span style="opacity:0.8">${{closest.pt.dt}}</span>`;
+        tooltip.innerHTML = `<strong>${{closest.pt.w}} lbs</strong><br><span style="opacity:0.8; color:#99f6e4;">${{closest.pt.dt}}</span>`;
       }} else {{
         tooltip.style.display = 'none';
       }}
