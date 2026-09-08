@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Renpho & Google Fit Health Analytics</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
@@ -31,6 +34,12 @@
       z-index: 50;
       white-space: nowrap;
       border: 1px solid rgba(255,255,255,0.1);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      cursor: grab;
+    }
+    input[type=range]:active::-webkit-slider-thumb {
+      cursor: grabbing;
     }
   </style>
 </head>
@@ -61,7 +70,7 @@
           <span class="text-3xl font-black text-emerald-500" id="stat-current">217.2</span>
           <span class="text-sm font-medium text-[var(--muted-foreground)]">lbs</span>
         </div>
-        <span class="text-xs text-emerald-600 font-medium mt-1 block">Sep 02, 2026 (All-Time Low)</span>
+        <span class="text-xs text-emerald-600 font-medium mt-1 block">2026-09-02 (All-Time Low)</span>
       </div>
 
       <div class="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] shadow-sm">
@@ -154,7 +163,7 @@
 
         <!-- Range Slider -->
         <div class="space-y-2 py-1">
-          <input type="range" id="stepSlider" min="0" max="15000" step="500" value="0" class="w-full h-3.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+          <input type="range" id="stepSlider" min="0" max="15000" step="500" value="0" oninput="renderMilestones()" onchange="renderMilestones()" class="w-full h-3.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
           <div class="flex justify-between text-[11px] text-[var(--muted-foreground)] font-semibold">
             <span>+0 (Baseline: 4,227)</span>
             <span>+5,000 (Total: 9,227)</span>
@@ -168,7 +177,7 @@
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div class="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
               <span class="text-lg">🔥</span>
-              <span id="equationText">If you increase your steps by +0 extra/day, your weight loss stays at baseline.</span>
+              <span id="equationText">If you stay at your 45-day baseline of <strong>4,227 steps/day</strong>, your loss rate is <strong>-0.49 lbs/week</strong>.</span>
             </div>
             <div class="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 whitespace-nowrap" id="totalRateBadge">
               Total Rate: -0.49 lbs / week
@@ -190,8 +199,8 @@
             </h3>
             <p class="text-xs text-[var(--muted-foreground)]">Projected completion dates for each 5-lb interval from current weight (217.2 lbs)</p>
           </div>
-          <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500" id="milestoneSpeedBadge">
-            At Baseline Pace
+          <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-500" id="milestoneSpeedBadge">
+            Baseline Pace (-0.49 lb/wk)
           </span>
         </div>
 
@@ -207,7 +216,195 @@
               </tr>
             </thead>
             <tbody id="milestones-table-body" class="divide-y divide-[var(--border)] bg-[var(--card)]">
-              <!-- Milestones populated via JS -->
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          215 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -2.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Oct 03, 2026
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~4.5 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Oct 03, 2026
+          <span class="text-xs block font-medium opacity-80">~4.5 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          210 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -7.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Dec 14, 2026
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~14.8 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Dec 14, 2026
+          <span class="text-xs block font-medium opacity-80">~14.8 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          205 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -12.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Feb 24, 2027
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~25.0 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Feb 24, 2027
+          <span class="text-xs block font-medium opacity-80">~25.0 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          200 lbs <span class="ml-2 px-2 py-0.5 text-[10px] font-extrabold bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-md uppercase">Onederland 🎉</span>
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -17.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          May 06, 2027
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~35.3 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          May 06, 2027
+          <span class="text-xs block font-medium opacity-80">~35.3 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          195 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -22.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Jul 17, 2027
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~45.5 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Jul 17, 2027
+          <span class="text-xs block font-medium opacity-80">~45.5 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          190 lbs <span class="ml-2 px-2 py-0.5 text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md uppercase">Target Goal 🎯</span>
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -27.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Sep 27, 2027
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~55.8 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Sep 27, 2027
+          <span class="text-xs block font-medium opacity-80">~55.8 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          185 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -32.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Dec 08, 2027
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~66.0 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Dec 08, 2027
+          <span class="text-xs block font-medium opacity-80">~66.0 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          180 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -37.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Feb 17, 2028
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~76.2 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Feb 17, 2028
+          <span class="text-xs block font-medium opacity-80">~76.2 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
+
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          175 lbs 
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -42.2 lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          Apr 29, 2028
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~86.5 wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          Apr 29, 2028
+          <span class="text-xs block font-medium opacity-80">~86.5 wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    
             </tbody>
           </table>
         </div>

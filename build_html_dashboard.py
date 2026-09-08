@@ -1,5 +1,6 @@
 import json
 import os
+import datetime
 
 workspace_dir = os.path.dirname(os.path.abspath(__file__))
 json_path = os.path.join(workspace_dir, 'dashboard_data.json')
@@ -8,7 +9,7 @@ with open(json_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 weights_json = json.dumps(data['weights'])
-avg_steps = data.get('avg_45d_steps', 4226)
+avg_steps = data.get('avg_45d_steps', 4227)
 weekly = data.get('weekly_stats', {})
 anomalies = data.get('anomalies', [])
 past_reports = data.get('past_reports', [])
@@ -16,11 +17,75 @@ past_reports = data.get('past_reports', [])
 reports_json = json.dumps(past_reports)
 anomalies_json = json.dumps(anomalies)
 
+# Server-side milestone generation (Progressive enhancement fallback)
+all_weights = sorted(data['weights'], key=lambda x: x['dt'])
+latest_entry = all_weights[-1] if all_weights else {'w': 217.2, 'dt': '2026-09-02'}
+latest_w = latest_entry['w']
+
+def parse_dt(dt_str):
+    try:
+        return datetime.datetime.strptime(dt_str[:10], '%Y-%m-%d')
+    except Exception:
+        return datetime.datetime.now()
+
+latest_dt = parse_dt(latest_entry['dt'])
+
+# 6-month historical loss rate calculation
+six_mo_ago = latest_dt - datetime.timedelta(days=180)
+six_mo_data = [d for d in all_weights if parse_dt(d['dt']) >= six_mo_ago]
+if six_mo_data:
+    start_w = six_mo_data[0]['w']
+    start_dt = parse_dt(six_mo_data[0]['dt'])
+    days_diff = max(1, (latest_dt - start_dt).days)
+    base_rate = max(0.2, (start_w - latest_w) / (days_diff / 7.0))
+else:
+    base_rate = 0.49
+
+milestone_targets = [215, 210, 205, 200, 195, 190, 185, 180, 175]
+milestones_html_list = []
+for target in milestone_targets:
+    rem = max(0.0, latest_w - target)
+    weeks = rem / base_rate
+    proj_date = latest_dt + datetime.timedelta(days=weeks * 7)
+    proj_str = proj_date.strftime('%b %d, %Y')
+    
+    special_tag = ''
+    if target == 200:
+        special_tag = '<span class="ml-2 px-2 py-0.5 text-[10px] font-extrabold bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-md uppercase">Onederland 🎉</span>'
+    elif target == 190:
+        special_tag = '<span class="ml-2 px-2 py-0.5 text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md uppercase">Target Goal 🎯</span>'
+    
+    milestones_html_list.append(f"""
+      <tr class="hover:bg-[var(--background)]/50 transition-colors">
+        <td class="py-3 px-4 font-bold text-base flex items-center">
+          {target} lbs {special_tag}
+        </td>
+        <td class="py-3 px-4 text-[var(--foreground)] font-semibold">
+          -{rem:.1f} lbs
+        </td>
+        <td class="py-3 px-4 text-[var(--muted-foreground)] font-medium">
+          {proj_str}
+          <span class="text-xs block text-[var(--muted-foreground)]/70">~{weeks:.1f} wks</span>
+        </td>
+        <td class="py-3 px-4 font-bold text-[var(--foreground)]">
+          {proj_str}
+          <span class="text-xs block font-medium opacity-80">~{weeks:.1f} wks</span>
+        </td>
+        <td class="py-3 px-4 text-right">
+          <span class="text-[var(--muted-foreground)] font-medium">0 days</span>
+        </td>
+      </tr>
+    """)
+initial_milestones_html = "\n".join(milestones_html_list)
+
 html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Renpho & Google Fit Health Analytics</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
@@ -50,6 +115,12 @@ html_content = f"""<!DOCTYPE html>
       white-space: nowrap;
       border: 1px solid rgba(255,255,255,0.1);
     }}
+    input[type=range]::-webkit-slider-thumb {{
+      cursor: grab;
+    }}
+    input[type=range]:active::-webkit-slider-thumb {{
+      cursor: grabbing;
+    }}
   </style>
 </head>
 <body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-4 md:p-6 min-h-screen">
@@ -76,10 +147,10 @@ html_content = f"""<!DOCTYPE html>
       <div class="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] shadow-sm">
         <span class="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">Current / Lowest</span>
         <div class="mt-2 flex items-baseline gap-1">
-          <span class="text-3xl font-black text-emerald-500" id="stat-current">217.2</span>
+          <span class="text-3xl font-black text-emerald-500" id="stat-current">{latest_w}</span>
           <span class="text-sm font-medium text-[var(--muted-foreground)]">lbs</span>
         </div>
-        <span class="text-xs text-emerald-600 font-medium mt-1 block">Sep 02, 2026 (All-Time Low)</span>
+        <span class="text-xs text-emerald-600 font-medium mt-1 block">{weekly.get('period_end', 'Sep 02, 2026')} (All-Time Low)</span>
       </div>
 
       <div class="bg-[var(--card)] p-4 rounded-xl border border-[var(--border)] shadow-sm">
@@ -172,7 +243,7 @@ html_content = f"""<!DOCTYPE html>
 
         <!-- Range Slider -->
         <div class="space-y-2 py-1">
-          <input type="range" id="stepSlider" min="0" max="15000" step="500" value="0" class="w-full h-3.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
+          <input type="range" id="stepSlider" min="0" max="15000" step="500" value="0" oninput="renderMilestones()" onchange="renderMilestones()" class="w-full h-3.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600" />
           <div class="flex justify-between text-[11px] text-[var(--muted-foreground)] font-semibold">
             <span>+0 (Baseline: {avg_steps:,})</span>
             <span>+5,000 (Total: {avg_steps + 5000:,})</span>
@@ -186,14 +257,14 @@ html_content = f"""<!DOCTYPE html>
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div class="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
               <span class="text-lg">🔥</span>
-              <span id="equationText">If you increase your steps by +0 extra/day, your weight loss stays at baseline.</span>
+              <span id="equationText">If you stay at your 45-day baseline of <strong>{avg_steps:,} steps/day</strong>, your loss rate is <strong>-{base_rate:.2f} lbs/week</strong>.</span>
             </div>
             <div class="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 whitespace-nowrap" id="totalRateBadge">
-              Total Rate: -0.49 lbs / week
+              Total Rate: -{base_rate:.2f} lbs / week
             </div>
           </div>
           <p class="text-xs text-[var(--muted-foreground)]" id="equationSubtext">
-            Baseline 6-month loss rate is <strong>-0.49 lbs/week</strong> at {avg_steps:,} steps/day. Each +1,000 extra daily steps burns ~50 kcal/day (~0.10 lb fat/week).
+            Baseline 6-month loss rate is <strong>-{base_rate:.2f} lbs/week</strong> at {avg_steps:,} steps/day. Each +1,000 extra daily steps burns ~50 kcal/day (~0.10 lb fat/week).
           </p>
         </div>
 
@@ -206,10 +277,10 @@ html_content = f"""<!DOCTYPE html>
             <h3 class="text-base font-bold text-[var(--foreground)] flex items-center gap-2">
               <span>🎯</span> 5-lb Milestone Target Dates
             </h3>
-            <p class="text-xs text-[var(--muted-foreground)]">Projected completion dates for each 5-lb interval from current weight (217.2 lbs)</p>
+            <p class="text-xs text-[var(--muted-foreground)]">Projected completion dates for each 5-lb interval from current weight ({latest_w} lbs)</p>
           </div>
-          <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500" id="milestoneSpeedBadge">
-            At Baseline Pace
+          <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-500" id="milestoneSpeedBadge">
+            Baseline Pace (-{base_rate:.2f} lb/wk)
           </span>
         </div>
 
@@ -225,7 +296,7 @@ html_content = f"""<!DOCTYPE html>
               </tr>
             </thead>
             <tbody id="milestones-table-body" class="divide-y divide-[var(--border)] bg-[var(--card)]">
-              <!-- Milestones populated via JS -->
+{initial_milestones_html}
             </tbody>
           </table>
         </div>
