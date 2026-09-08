@@ -1064,19 +1064,19 @@
 
       reportsList.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-[var(--background)]/50 transition-colors';
-        const changeColor = r.weekly_change < 0 ? 'text-emerald-500' : (r.weekly_change > 0 ? 'text-rose-500' : 'text-[var(--muted-foreground)]');
+        tr.className = 'hover:bg-[#123832]/60 transition-colors border-b border-[#164e45]';
+        const changeColor = r.weekly_change < 0 ? 'text-[#2dd4bf]' : (r.weekly_change > 0 ? 'text-rose-400' : 'text-[#99f6e4]');
         const changeSign = r.weekly_change > 0 ? '+' : '';
         
         tr.innerHTML = `
-          <td class="py-3 px-4 font-bold">${r.date}</td>
-          <td class="py-3 px-4 font-semibold">${r.weight} lbs</td>
+          <td class="py-3 px-4 font-bold text-[#f0fdfa]">${r.date}</td>
+          <td class="py-3 px-4 font-semibold text-[#f0fdfa]">${r.weight} lbs</td>
           <td class="py-3 px-4 font-bold ${changeColor}">${changeSign}${r.weekly_change} lbs</td>
-          <td class="py-3 px-4">${(r.steps_avg || 0).toLocaleString()} / day</td>
-          <td class="py-3 px-4">${r.rhr_min || '--'} BPM</td>
-          <td class="py-3 px-4">${r.spo2_avg || '--'}%</td>
+          <td class="py-3 px-4 text-[#99f6e4]">${(r.steps_avg || 0).toLocaleString()} / day</td>
+          <td class="py-3 px-4 text-[#99f6e4]">${r.rhr_min || '--'} BPM</td>
+          <td class="py-3 px-4 text-[#99f6e4]">${r.spo2_avg || '--'}%</td>
           <td class="py-3 px-4 text-right">
-            <a href="${r.url}" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all inline-block">
+            <a href="${r.url}" target="_blank" class="px-3.5 py-1.5 bg-[#14b8a6] hover:bg-[#2dd4bf] text-[#042f2e] font-black text-xs rounded-lg shadow-sm transition-all inline-block">
               View Report →
             </a>
           </td>

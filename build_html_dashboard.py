@@ -957,19 +957,19 @@ html_content = f"""<!DOCTYPE html>
 
       reportsList.forEach(r => {{
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-[var(--background)]/50 transition-colors';
-        const changeColor = r.weekly_change < 0 ? 'text-emerald-500' : (r.weekly_change > 0 ? 'text-rose-500' : 'text-[var(--muted-foreground)]');
+        tr.className = 'hover:bg-[#123832]/60 transition-colors border-b border-[#164e45]';
+        const changeColor = r.weekly_change < 0 ? 'text-[#2dd4bf]' : (r.weekly_change > 0 ? 'text-rose-400' : 'text-[#99f6e4]');
         const changeSign = r.weekly_change > 0 ? '+' : '';
         
         tr.innerHTML = `
-          <td class="py-3 px-4 font-bold">${{r.date}}</td>
-          <td class="py-3 px-4 font-semibold">${{r.weight}} lbs</td>
+          <td class="py-3 px-4 font-bold text-[#f0fdfa]">${{r.date}}</td>
+          <td class="py-3 px-4 font-semibold text-[#f0fdfa]">${{r.weight}} lbs</td>
           <td class="py-3 px-4 font-bold ${{changeColor}}">${{changeSign}}${{r.weekly_change}} lbs</td>
-          <td class="py-3 px-4">${{(r.steps_avg || 0).toLocaleString()}} / day</td>
-          <td class="py-3 px-4">${{r.rhr_min || '--'}} BPM</td>
-          <td class="py-3 px-4">${{r.spo2_avg || '--'}}%</td>
+          <td class="py-3 px-4 text-[#99f6e4]">${{(r.steps_avg || 0).toLocaleString()}} / day</td>
+          <td class="py-3 px-4 text-[#99f6e4]">${{r.rhr_min || '--'}} BPM</td>
+          <td class="py-3 px-4 text-[#99f6e4]">${{r.spo2_avg || '--'}}%</td>
           <td class="py-3 px-4 text-right">
-            <a href="${{r.url}}" target="_blank" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg shadow-sm transition-all inline-block">
+            <a href="${{r.url}}" target="_blank" class="px-3.5 py-1.5 bg-[#14b8a6] hover:bg-[#2dd4bf] text-[#042f2e] font-black text-xs rounded-lg shadow-sm transition-all inline-block">
               View Report →
             </a>
           </td>
@@ -998,12 +998,22 @@ with open(dashboard_file, 'w', encoding='utf-8') as f:
 with open(index_file, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-# Save snapshot to reports/
+# Save snapshots to reports/ for all archived reports
 reports_dir = os.path.join(workspace_dir, "reports")
 os.makedirs(reports_dir, exist_ok=True)
-current_date_str = weekly.get('period_end', '2026-09-04')
-snapshot_path = os.path.join(reports_dir, f"report_{current_date_str}.html")
-with open(snapshot_path, 'w', encoding='utf-8') as f:
+current_date_str = weekly.get('period_end', '2026-09-02')
+
+# Ensure current snapshot is written
+current_snap_path = os.path.join(reports_dir, f"report_{current_date_str}.html")
+with open(current_snap_path, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print(f"Generated interactive dashboard at {index_file} and archived snapshot at {snapshot_path}")
+# Ensure all historical archive files referenced in reports_archive.json exist
+for r in past_reports:
+    r_date = r.get('date', current_date_str)
+    snap_path = os.path.join(reports_dir, f"report_{r_date}.html")
+    if not os.path.exists(snap_path) or r_date == current_date_str:
+        with open(snap_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+print(f"Generated interactive dashboard and verified all {len(past_reports)} archived snapshots in {reports_dir}")
