@@ -4,13 +4,13 @@
     "period_start": "2026-08-26",
     "weight_current": 217.2,
     "weight_weekly_change": -1.4,
-    "steps_avg_daily": 4485,
+    "steps_avg_daily": 3937,
     "hr_avg": 82.5,
     "rhr_min": 52,
     "hr_peak_max": 129,
     "spo2_avg": 97.9,
     "spo2_min": 96.0,
-    "calories_avg_daily": 5203
+    "calories_avg_daily": 4520
   },
   "anomalies": [
     {
