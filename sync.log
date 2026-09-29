@@ -1,0 +1,196 @@
+=== Running Weekly Google Fit Dashboard Sync ===
+
+--- [ 2026-09-11 12:00:01 ] Fetching Google Fit Data ---
+Authentication successful with all scopes!
+Discovered 177 data source(s).
+-> Found 6314 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 12206 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 19719 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 15484 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 5299 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 638 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 4076 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 5229 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 9258 points for active_minutes (com.google.active_minutes) from source: com.google.android.fit
+-> Found 91702 points for active_minutes (com.google.active_minutes) from source: com.google.android.gms
+-> Found 274 points for body_fat_pct (com.google.body.fat.percentage) from source: com.google.android.gms
+-> Found 622 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 7943 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 14773 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 14863 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 2491 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 217 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 3717 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 3601 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 5622 points for calories_burned (com.google.calories.expended) from source: com.google.android.fit
+-> Found 171555 points for calories_burned (com.google.calories.expended) from source: com.google.android.gms
+-> Found 325 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 499 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 483 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 1295 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 530 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 4 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 282 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 197 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 281 points for heart_points (com.google.heart_minutes) from source: com.google.android.fit
+-> Found 4615 points for heart_points (com.google.heart_minutes) from source: com.google.android.gms
+-> Found 200000 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.google.android.gms
+-> Found 9128 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.google.android.gms
+-> Found 3 points for height_m (com.google.height) from source: com.google.android.gms
+-> Found 8459 points for oxygen_saturation_pct (com.google.oxygen_saturation) from source: com.google.android.gms
+-> Found 14745 points for sleep_stage (com.google.sleep.segment) from source: com.google.android.gms
+-> Found 13694 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 29997 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 81387 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 55730 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 13005 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 1912 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 17794 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 19962 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 32827 points for steps (com.google.step_count.delta) from source: com.google.android.fit
+-> Found 810 points for steps (com.google.step_count.delta) from source: com.google.android.gms
+-> Found 200000 points for steps (com.google.step_count.delta) from source: com.google.android.gms
+-> Found 200000 points for steps (com.google.step_count.delta) from source: com.google.android.gms
+-> Found 5563 points for steps (com.google.step_count.delta) from source: com.google.android.gms
+-> Found 9829 points for steps (com.google.step_count.delta) from source: com.google.android.gms
+-> Found 1849 points for steps (com.google.step_count.delta) from source: com.google.android.gms
+-> Found 351 points for weight_kg (com.google.weight) from source: com.google.android.gms
+-> Found 40 points for active_minutes (com.google.active_minutes) from source: com.google.android.apps.fitness
+-> Found 275 points for body_fat_pct (com.google.body.fat.percentage) from source: com.qingniu.arboleaf
+-> Found 1 points for body_fat_pct (com.google.body.fat.percentage) from source: com.qingniu.arboleaf
+-> Found 1 points for body_fat_pct (com.google.body.fat.percentage) from source: com.renpho.health
+-> Found 71361 points for calories_burned (com.google.calories.expended) from source: com.fitbit.FitbitMobile
+-> Found 1 points for calories_burned (com.google.calories.expended) from source: com.google.android.apps.fitness
+-> Found 75 points for calories_burned (com.google.calories.expended) from source: com.huami.watch.hmwatchmanager
+-> Found 579 points for calories_burned (com.google.calories.expended) from source: com.nothing.smartcenter
+-> Found 408 points for calories_burned (com.google.calories.expended) from source: com.renpho.health
+-> Found 10 points for calories_burned (com.google.calories.expended) from source: com.topstep.fitcloudpro
+-> Found 39 points for heart_points (com.google.heart_minutes) from source: com.google.android.apps.fitness
+-> Found 200000 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.fitbit.FitbitMobile
+-> Found 2 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.google.android.apps.fitness
+-> Found 5761 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.huami.watch.hmwatchmanager
+-> Found 11230 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.ouraring.oura
+-> Found 1746 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.renpho.health
+-> Found 1762 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.topstep.fitcloudpro
+-> Found 5038 points for heart_rate_bpm (com.google.heart_rate.bpm) from source: com.topstep.fitcloudpro
+-> Found 2 points for height_m (com.google.height) from source: com.google.android.apps.fitness
+-> Found 1 points for height_m (com.google.height) from source: com.nothing.smartcenter
+-> Found 52 points for oxygen_saturation_pct (com.google.oxygen_saturation) from source: com.nothing.smartcenter
+-> Found 435 points for oxygen_saturation_pct (com.google.oxygen_saturation) from source: com.renpho.health
+-> Found 7972 points for oxygen_saturation_pct (com.google.oxygen_saturation) from source: com.xiaomi.wearable
+-> Found 8669 points for sleep_stage (com.google.sleep.segment) from source: com.fitbit.FitbitMobile
+-> Found 314 points for sleep_stage (com.google.sleep.segment) from source: com.huami.watch.hmwatchmanager
+-> Found 62 points for sleep_stage (com.google.sleep.segment) from source: com.nothing.smartcenter
+-> Found 2731 points for sleep_stage (com.google.sleep.segment) from source: com.ouraring.oura
+-> Found 119 points for sleep_stage (com.google.sleep.segment) from source: com.topstep.fitcloudpro
+-> Found 2679 points for sleep_stage (com.google.sleep.segment) from source: com.xiaomi.wearable
+-> Found 68046 points for steps (com.google.step_count.delta) from source: com.fitbit.FitbitMobile
+-> Found 1 points for steps (com.google.step_count.delta) from source: com.google.android.apps.fitness
+-> Found 77 points for steps (com.google.step_count.delta) from source: com.huami.watch.hmwatchmanager
+-> Found 74 points for steps (com.google.step_count.delta) from source: com.huami.watch.hmwatchmanager
+-> Found 98 points for steps (com.google.step_count.delta) from source: com.nothing.smartcenter
+-> Found 118 points for steps (com.google.step_count.delta) from source: com.ouraring.oura
+-> Found 408 points for steps (com.google.step_count.delta) from source: com.renpho.health
+-> Found 10 points for steps (com.google.step_count.delta) from source: com.topstep.fitcloudpro
+-> Found 17 points for steps (com.google.step_count.delta) from source: com.topstep.fitcloudpro
+-> Found 1820 points for steps (com.google.step_count.delta) from source: com.xiaomi.wearable
+-> Found 41 points for weight_kg (com.google.weight) from source: com.fitbit.FitbitMobile
+-> Found 59 points for weight_kg (com.google.weight) from source: com.google.android.apps.fitness
+-> Found 1 points for weight_kg (com.google.weight) from source: com.nothing.smartcenter
+-> Found 10 points for weight_kg (com.google.weight) from source: com.omada.prevent
+-> Found 139 points for weight_kg (com.google.weight) from source: com.qingniu.arboleaf
+-> Found 275 points for weight_kg (com.google.weight) from source: com.qingniu.arboleaf
+-> Found 2 points for weight_kg (com.google.weight) from source: com.renpho.health
+Fetched 40 session(s).
+
+Successfully saved 1714638 records to fit_health_data.csv!
+
+Data Summary:
+               metric                      source_app  count
+       active_minutes com.google.android.apps.fitness     40
+       active_minutes          com.google.android.fit  78223
+       active_minutes          com.google.android.gms  91702
+         body_fat_pct          com.google.android.gms    274
+         body_fat_pct            com.qingniu.arboleaf    276
+         body_fat_pct               com.renpho.health      1
+      calories_burned         com.fitbit.FitbitMobile  71361
+      calories_burned com.google.android.apps.fitness      1
+      calories_burned          com.google.android.fit  53849
+      calories_burned          com.google.android.gms 171555
+      calories_burned  com.huami.watch.hmwatchmanager     75
+      calories_burned         com.nothing.smartcenter    579
+      calories_burned               com.renpho.health    408
+      calories_burned         com.topstep.fitcloudpro     10
+         heart_points com.google.android.apps.fitness     39
+         heart_points          com.google.android.fit   3896
+         heart_points          com.google.android.gms   4615
+       heart_rate_bpm         com.fitbit.FitbitMobile 200000
+       heart_rate_bpm com.google.android.apps.fitness      2
+       heart_rate_bpm          com.google.android.gms 209128
+       heart_rate_bpm  com.huami.watch.hmwatchmanager   5761
+       heart_rate_bpm               com.ouraring.oura  11230
+       heart_rate_bpm               com.renpho.health   1746
+       heart_rate_bpm         com.topstep.fitcloudpro   6800
+             height_m com.google.android.apps.fitness      2
+             height_m          com.google.android.gms      3
+             height_m         com.nothing.smartcenter      1
+oxygen_saturation_pct          com.google.android.gms   8459
+oxygen_saturation_pct         com.nothing.smartcenter     52
+oxygen_saturation_pct               com.renpho.health    435
+oxygen_saturation_pct             com.xiaomi.wearable   7972
+          sleep_hours             com.xiaomi.wearable     40
+          sleep_stage         com.fitbit.FitbitMobile   8669
+          sleep_stage          com.google.android.gms  14745
+          sleep_stage  com.huami.watch.hmwatchmanager    314
+          sleep_stage         com.nothing.smartcenter     62
+          sleep_stage               com.ouraring.oura   2731
+          sleep_stage         com.topstep.fitcloudpro    119
+          sleep_stage             com.xiaomi.wearable   2679
+                steps         com.fitbit.FitbitMobile  68046
+                steps com.google.android.apps.fitness      1
+                steps          com.google.android.fit 266308
+                steps          com.google.android.gms 418051
+                steps  com.huami.watch.hmwatchmanager    151
+                steps         com.nothing.smartcenter     98
+                steps               com.ouraring.oura    118
+                steps               com.renpho.health    408
+                steps         com.topstep.fitcloudpro     27
+                steps             com.xiaomi.wearable   1820
+            weight_kg         com.fitbit.FitbitMobile     41
+            weight_kg com.google.android.apps.fitness     59
+            weight_kg          com.google.android.gms    351
+            weight_kg         com.nothing.smartcenter      1
+            weight_kg               com.omada.prevent     10
+            weight_kg            com.qingniu.arboleaf    414
+            weight_kg               com.renpho.health      2
+           weight_lbs         com.fitbit.FitbitMobile     41
+           weight_lbs com.google.android.apps.fitness     59
+           weight_lbs          com.google.android.gms    351
+           weight_lbs         com.nothing.smartcenter      1
+           weight_lbs               com.omada.prevent     10
+           weight_lbs            com.qingniu.arboleaf    414
+           weight_lbs               com.renpho.health      2
+[main d29bd72] Automated sync & weekly report archive 2026-09-11 12:02
+ 8 files changed, 1159 insertions(+), 42 deletions(-)
+ create mode 100644 reports/report_2026-09-11.html
+ create mode 100644 sync.log
+
+
+--- [ 2026-09-11 12:01:45 ] Processing & Aggregating Metrics ---
+Data processing & anomaly detection complete!
+Weekly Stats: {'period_end': '2026-09-02', 'period_start': '2026-08-26', 'weight_current': 217.2, 'weight_weekly_change': -1.4, 'steps_avg_daily': 3937, 'hr_avg': 82.5, 'rhr_min': 52, 'hr_peak_max': 129, 'spo2_avg': 97.9, 'spo2_min': 96.0, 'calories_avg_daily': 4520}
+Generated 4 anomaly callouts.
+
+
+--- [ 2026-09-11 12:01:53 ] Preparing JSON Payload ---
+Prepared dashboard payload with 3 archived reports.
+
+
+--- [ 2026-09-11 12:02:00 ] Rebuilding HTML Dashboard ---
+Generated interactive dashboard and verified all 3 archived snapshots in C:\Users\DigitalArthas\.gemini\antigravity\scratch\google_fit_dashboard\reports
+
+
+--- [ 2026-09-11 12:02:00 ] Syncing to GitHub Pages ---
+[SUCCESS] Pushed latest update to GitHub Pages!
+
+[COMPLETE] All steps completed successfully!
