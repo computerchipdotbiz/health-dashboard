@@ -1,4 +1,5 @@
-﻿import os
+import os
+import sys
 import json
 import datetime
 import pandas as pd
@@ -29,16 +30,27 @@ def get_fitness_service():
     if os.path.exists(token_path):
         try:
             creds = Credentials.from_authorized_user_file(token_path, ALL_SCOPES)
-        except Exception:
+        except Exception as e:
+            print(f"Error loading credentials from {token_path}: {e}")
             creds = None
             
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
                 creds.refresh(Request())
-            except Exception:
+                with open(token_path, 'w', encoding='utf-8') as token:
+                    token.write(creds.to_json())
+                print("[INFO] OAuth token successfully refreshed and saved.")
+            except Exception as e:
+                print(f"[ERROR] Failed to refresh token: {e}")
                 creds = None
+                
         if not creds or not creds.valid:
+            if not sys.stdin or not sys.stdin.isatty():
+                raise RuntimeError(
+                    "Google Fit OAuth token expired and cannot be refreshed non-interactively. "
+                    "Please run 'python auth_server_robust.py' to re-authorize."
+                )
             with open(cred_path, 'r', encoding='utf-8-sig') as f:
                 client_config = json.load(f)
             flow = InstalledAppFlow.from_client_config(client_config, ALL_SCOPES)
@@ -48,9 +60,8 @@ def get_fitness_service():
                 authorization_prompt_message="\n" + "="*70 + "\nAUTH_URL_START:{url}:AUTH_URL_END\n" + "="*70 + "\n",
                 open_browser=True
             )
-            
-        with open(token_path, 'w', encoding='utf-8') as token:
-            token.write(creds.to_json())
+            with open(token_path, 'w', encoding='utf-8') as token:
+                token.write(creds.to_json())
             
     return build('fitness', 'v1', credentials=creds)
 
