@@ -1,5 +1,5 @@
 {
-  "last_updated": "Sep 29, 2026",
+  "last_updated": "Oct 02, 2026",
   "weights": [
     {
       "d": "2019-11-29",
@@ -3364,19 +3364,19 @@
       "bf": 27.3
     }
   ],
-  "avg_45d_steps": 3384,
+  "avg_45d_steps": 3364,
   "weekly_stats": {
     "period_end": "2026-09-20",
     "period_start": "2026-09-13",
     "weight_current": 217.9,
     "weight_weekly_change": 0.0,
-    "steps_avg_daily": 2664,
+    "steps_avg_daily": 2569,
     "hr_avg": 82.5,
     "rhr_min": 52,
     "hr_peak_max": 129,
     "spo2_avg": 97.9,
     "spo2_min": 96.0,
-    "calories_avg_daily": 3338
+    "calories_avg_daily": 3282
   },
   "anomalies": [
     {
@@ -3399,6 +3399,17 @@
     }
   ],
   "past_reports": [
+    {
+      "date": "2026-10-02",
+      "filename": "report_2026-10-02.html",
+      "url": "reports/report_2026-10-02.html",
+      "weight": 217.9,
+      "weekly_change": 0.0,
+      "steps_avg": 3364,
+      "hr_avg": 82.5,
+      "rhr_min": 52,
+      "spo2_avg": 97.9
+    },
     {
       "date": "2026-09-29",
       "filename": "report_2026-09-29.html",
