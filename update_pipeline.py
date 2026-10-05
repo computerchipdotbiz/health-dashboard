@@ -49,6 +49,7 @@ def main():
         sys.exit(1)
 
     push_to_github()
+    run_step('deploy_pages.py', 'Deploying to Cloudflare Pages (fit.chipgowan.com)')
     print("\n[COMPLETE] All steps completed successfully!")
 
 if __name__ == '__main__':
