@@ -1,4 +1,4 @@
-﻿import json
+import json
 import os
 import urllib.request
 import urllib.parse
@@ -39,6 +39,12 @@ auth_url = 'https://accounts.google.com/o/oauth2/auth?' + urllib.parse.urlencode
 print("\n" + "="*70)
 print("AUTH_URL:" + auth_url)
 print("="*70 + "\n")
+
+import webbrowser
+try:
+    webbrowser.open(auth_url)
+except Exception:
+    pass
 
 class OAuthHandler(BaseHTTPRequestHandler):
     def do_GET(self):

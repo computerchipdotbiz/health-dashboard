@@ -46,10 +46,11 @@ def get_fitness_service():
                 creds = None
                 
         if not creds or not creds.valid:
-            if not sys.stdin or not sys.stdin.isatty():
+            is_interactive = '--interactive' in sys.argv
+            if not is_interactive:
                 raise RuntimeError(
-                    "Google Fit OAuth token expired and cannot be refreshed non-interactively. "
-                    "Please run 'python auth_server_robust.py' to re-authorize."
+                    "Google Fit OAuth token expired and cannot be refreshed non-interactively.\n"
+                    "Please run 'python auth_server_robust.py' to re-authorize, and ensure the OAuth consent screen in Google Cloud Console is published to Production so tokens do not expire after 7 days."
                 )
             with open(cred_path, 'r', encoding='utf-8-sig') as f:
                 client_config = json.load(f)

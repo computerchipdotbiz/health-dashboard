@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 import numpy as np
 import json
 import os
@@ -110,7 +110,8 @@ daily_steps = est_steps.groupby('date')['val'].sum().reset_index().rename(column
 daily_steps['steps'] = daily_steps['steps'].round(0)
 
 # 7. Weekly Averages & Anomaly Detection (Past 7 Days vs Prior Periods)
-latest_date = pd.to_datetime(clean_weight['date'].max())
+all_dates = pd.to_datetime(df['date'].dropna())
+latest_date = all_dates.max() if not all_dates.empty else pd.to_datetime(clean_weight['date'].max())
 past_7_days = latest_date - pd.Timedelta(days=7)
 past_14_days = latest_date - pd.Timedelta(days=14)
 
@@ -120,11 +121,28 @@ recent_cal = daily_cal_summary[daily_cal_summary['date'] >= past_7_days]
 recent_steps = daily_steps[daily_steps['date'] >= past_7_days]
 recent_weight = clean_weight[pd.to_datetime(clean_weight['date']) >= past_7_days]
 
+current_weight = float(clean_weight.iloc[-1]['weight_lbs']) if not clean_weight.empty else 217.9
+latest_weight_date = pd.to_datetime(clean_weight.iloc[-1]['date']) if not clean_weight.empty else latest_date
+
+# Find weight reading approximately 7 days before the latest weigh-in
+prior_weight_candidates = clean_weight[
+    pd.to_datetime(clean_weight['date']) <= (latest_weight_date - pd.Timedelta(days=5))
+]
+if not prior_weight_candidates.empty:
+    prior_weight = float(prior_weight_candidates.iloc[-1]['weight_lbs'])
+    weight_weekly_change = round(current_weight - prior_weight, 1)
+else:
+    distinct_dates = clean_weight.drop_duplicates(subset=['date'], keep='last')
+    if len(distinct_dates) >= 2:
+        weight_weekly_change = round(float(current_weight - distinct_dates.iloc[-2]['weight_lbs']), 1)
+    else:
+        weight_weekly_change = 0.0
+
 weekly_stats = {
     'period_end': latest_date.strftime('%Y-%m-%d'),
     'period_start': past_7_days.strftime('%Y-%m-%d'),
-    'weight_current': float(clean_weight.iloc[-1]['weight_lbs']),
-    'weight_weekly_change': round(float(clean_weight.iloc[-1]['weight_lbs'] - clean_weight.iloc[-2]['weight_lbs']), 1) if len(clean_weight) >= 2 else 0.0,
+    'weight_current': current_weight,
+    'weight_weekly_change': weight_weekly_change,
     'steps_avg_daily': int(recent_steps['steps'].mean()) if not recent_steps.empty else 4226,
     'hr_avg': round(float(recent_hr['hr_avg'].mean()), 1) if not recent_hr.empty else 82.5,
     'rhr_min': int(recent_hr['hr_min'].min()) if not recent_hr.empty else 52,

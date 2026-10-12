@@ -1,16 +1,16 @@
 {
   "weekly_stats": {
-    "period_end": "2026-09-20",
-    "period_start": "2026-09-13",
+    "period_end": "2026-10-12",
+    "period_start": "2026-10-05",
     "weight_current": 217.9,
-    "weight_weekly_change": 0.0,
-    "steps_avg_daily": 2569,
+    "weight_weekly_change": -1.8,
+    "steps_avg_daily": 2366,
     "hr_avg": 82.5,
     "rhr_min": 52,
     "hr_peak_max": 129,
     "spo2_avg": 97.9,
     "spo2_min": 96.0,
-    "calories_avg_daily": 3282
+    "calories_avg_daily": 2983
   },
   "anomalies": [
     {
@@ -30,6 +30,12 @@
       "metric": "Active Cardio Zone",
       "title": "Peak Active Heart Rate: 129 BPM",
       "desc": "Cardio session reached peak intensity of 129 BPM during high-cadence walking."
+    },
+    {
+      "type": "success",
+      "metric": "Weight Progression",
+      "title": "Weight Loss Recorded: -1.8 lbs this week",
+      "desc": "Current weight stands at 217.9 lbs, maintaining steady progress toward your 190.0 lbs goal."
     }
   ]
 }
