@@ -8,12 +8,13 @@ WORKSPACE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def run_step(script_name, description):
     script_path = os.path.join(WORKSPACE_DIR, script_name)
-    print(f"\n--- [ {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ] {description} ---")
-    res = subprocess.run([sys.executable, script_path], cwd=WORKSPACE_DIR, capture_output=True, text=True)
+    print(f"\n--- [ {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ] {description} ---", flush=True)
+    res = subprocess.run([sys.executable, script_path], cwd=WORKSPACE_DIR, capture_output=True, text=True, encoding='utf-8', errors='replace')
     if res.returncode != 0:
-        print(f"ERROR running {script_name}:\n{res.stderr}")
+        print(f"ERROR running {script_name}:\n{res.stderr}", flush=True)
         return False
-    print(res.stdout)
+    if res.stdout:
+        print(res.stdout, flush=True)
     return True
 
 def push_to_github():
