@@ -1,16 +1,16 @@
 {
   "weekly_stats": {
-    "period_end": "2026-10-12",
-    "period_start": "2026-10-05",
+    "period_end": "2026-10-16",
+    "period_start": "2026-10-09",
     "weight_current": 217.9,
     "weight_weekly_change": -1.8,
-    "steps_avg_daily": 2366,
+    "steps_avg_daily": 2641,
     "hr_avg": 82.5,
     "rhr_min": 52,
     "hr_peak_max": 129,
     "spo2_avg": 97.9,
     "spo2_min": 96.0,
-    "calories_avg_daily": 2983
+    "calories_avg_daily": 3104
   },
   "anomalies": [
     {
