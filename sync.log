@@ -986,3 +986,34 @@ Generated 4 anomaly callouts.
 
 
 --- [ 2026-10-30 12:01:14 ] Preparing JSON Payload ---
+Prepared dashboard payload with 9 archived reports.
+
+
+--- [ 2026-10-30 12:01:15 ] Rebuilding HTML Dashboard ---
+Generated interactive dashboard and verified all 9 archived snapshots in C:\Users\DigitalArthas\.gemini\antigravity\scratch\google_fit_dashboard\reports
+
+
+--- [ 2026-10-30 12:01:16 ] Syncing to GitHub Pages ---
+warning: in the working copy of 'sync.log', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.wrangler/cache/pages.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.wrangler/cache/wrangler-account.json', LF will be replaced by CRLF the next time Git touches it
+[main dec7ea3] Automated sync & weekly report archive 2026-10-30 12:01
+ 14 files changed, 2516 insertions(+), 74 deletions(-)
+ create mode 100644 .wrangler/cache/pages.json
+ create mode 100644 .wrangler/cache/wrangler-account.json
+ create mode 100644 public/reports/report_2026-10-23.html
+ create mode 100644 reports/report_2026-10-30.html
+[SUCCESS] Pushed latest update to GitHub Pages!
+
+--- [ 2026-10-30 12:01:19 ] Deploying to Cloudflare Pages (fit.chipgowan.com) ---
+Traceback (most recent call last):
+  File "C:\Users\DigitalArthas\.gemini\antigravity\scratch\google_fit_dashboard\update_pipeline.py", line 57, in <module>
+    main()
+  File "C:\Users\DigitalArthas\.gemini\antigravity\scratch\google_fit_dashboard\update_pipeline.py", line 53, in main
+    run_step('deploy_pages.py', 'Deploying to Cloudflare Pages (fit.chipgowan.com)')
+  File "C:\Users\DigitalArthas\.gemini\antigravity\scratch\google_fit_dashboard\update_pipeline.py", line 17, in run_step
+    print(res.stdout, flush=True)
+  File "C:\Users\DigitalArthas\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 89-90: character maps to <undefined>
